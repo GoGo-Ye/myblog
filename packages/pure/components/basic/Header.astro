@@ -28,7 +28,7 @@ import { Icon } from '../user'
               class='w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary sm:w-fit sm:px-3 flex items-center gap-x-2 sm:gap-x-1'
               aria-label='Nav menu item'
             >
-              {item.icon && <Icon name={item.icon as keyof typeof Icons} class='size-4' />}
+              {item.icon && <Icon name={item.icon as keyof typeof Icon} class='size-4' />}
               {item.title}
             </a>
           ))
