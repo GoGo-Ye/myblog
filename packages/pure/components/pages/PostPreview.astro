@@ -8,10 +8,11 @@ import { Button, FormattedDate, Icon } from '../user'
 type Props<T extends CollectionKey> = {
   post: CollectionEntry<T>
   detailed?: boolean
+  homeMode?: boolean
   class?: string
 }
 
-const { post, detailed = false, class: className } = Astro.props
+const { post, detailed = false, homeMode = false, class: className } = Astro.props
 const { id, data } = post
 const { remarkPluginFrontmatter } = await render(post)
 const postDate = data.updatedDate ?? data.publishDate
@@ -28,7 +29,8 @@ const postDate = data.updatedDate ?? data.publishDate
     class={cn(
       'block w-full relative group rounded-2xl border bg-background transition-colors ease-in-out px-5 py-2.5 hover:bg-muted hover:text-primary',
       detailed && 'max-sm:px-4 sm:py-5',
-      detailed && data.heroImage && 'max-md:pt-24'
+      detailed && data.heroImage && 'max-md:pt-24',
+      homeMode && 'py-4'
     )}
     href={`/blog/${id}`}
     data-astro-prefetch
@@ -43,81 +45,102 @@ const postDate = data.updatedDate ?? data.publishDate
         />
       )
     }
-    <div
-      class={cn('relative flex flex-col gap-1', !detailed && 'sm:flex-row sm:items-center')}
-      style='z-index:1'
-    >
-      <FormattedDate class='min-w-[95px] text-xs' date={postDate} />
-
-      {/* title */}
-      <div class='flex justify-between flex-grow'>
-        <div class={detailed && 'font-medium'}>
+    
+    {/* 首页模式布局 */}
+    {homeMode ? (
+      <div class='relative flex flex-col gap-2' style='z-index:1'>
+        <FormattedDate class='text-sm text-muted-foreground' date={postDate} />
+        
+        <h3 class='text-lg font-medium'>
           {data.draft && <span class='text-red-500'>(Draft) </span>}
           {data.title}
-        </div>
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          width='16'
-          height='16'
-          viewBox='0 0 24 24'
-          fill='none'
-          stroke-width='2.5'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-          class='preview-redirect my-1 stroke-muted-foreground group-hover:stroke-primary'
-          ><line
-            x1='5'
-            y1='12'
-            x2='19'
-            y2='12'
-            class='translate-x-4 scale-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:scale-x-100'
-          ></line><polyline
-            points='12 5 19 12 12 19'
-            class='translate-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1'
-          ></polyline></svg
-        >
+        </h3>
+        
+        {data.description && (
+          <p class='text-sm text-muted-foreground line-clamp-2'>
+            {data.description}
+          </p>
+        )}
       </div>
-      {
-        detailed && (
-          <>
-            {/* desc */}
-            <p
-              class={cn(
-                'line-clamp-2 text-sm text-muted-foreground sm:line-clamp-3',
-                data.heroImage && 'sm:me-24'
-              )}
-            >
-              {data.description}
-            </p>
-            <div class='py-2 flex items-center gap-2 text-sm italic leading-4 text-muted-foreground'>
-              {/* reading time */}
-              <span class='flex items-center gap-1'>
-                <Icon name='time' class='size-4' />
-                {remarkPluginFrontmatter.minutesRead}
-              </span>
-              {/* language */}
-              {data.language && (
+    ) : (
+      /* 正常模式布局 */
+      <div
+        class={cn('relative flex flex-col gap-1', !detailed && 'sm:flex-row sm:items-center')}
+        style='z-index:1'
+      >
+        <FormattedDate class='min-w-[95px] text-xs' date={postDate} />
+
+        {/* title */}
+        <div class='flex justify-between flex-grow'>
+          <div class={detailed && 'font-medium'}>
+            {data.draft && <span class='text-red-500'>(Draft) </span>}
+            {data.title}
+          </div>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            width='16'
+            height='16'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke-width='2.5'
+            stroke-linecap='round'
+            stroke-linejoin='round'
+            class='preview-redirect my-1 stroke-muted-foreground group-hover:stroke-primary'
+            ><line
+              x1='5'
+              y1='12'
+              x2='19'
+              y2='12'
+              class='translate-x-4 scale-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:scale-x-100'
+            ></line><polyline
+              points='12 5 19 12 12 19'
+              class='translate-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1'
+            ></polyline></svg
+          >
+        </div>
+        {
+          detailed && (
+            <>
+              {/* desc */}
+              <p
+                class={cn(
+                  'line-clamp-2 text-sm text-muted-foreground sm:line-clamp-3',
+                  data.heroImage && 'sm:me-24'
+                )}
+              >
+                {data.description}
+              </p>
+              <!-- 已注释阅读时间和语言显示 -->
+              <!-- <div class='py-2 flex items-center gap-2 text-sm italic leading-4 text-muted-foreground'>
+                {/* reading time */}
                 <span class='flex items-center gap-1'>
-                  <Icon name='earth' class='size-4' />
-                  {data.language}
+                  <Icon name='time' class='size-4' />
+                  {remarkPluginFrontmatter.minutesRead}
                 </span>
+                {/* language */}
+                {data.language && (
+                  <span class='flex items-center gap-1'>
+                    <Icon name='earth' class='size-4' />
+                    {data.language}
+                  </span>
+                )}
+              </div> -->
+              {data.tags.length > 0 && (
+                <object>
+                  <ul class='tag-list mt-1 flex gap-2'>
+                    {data.tags.map((tag: string) => (
+                      <li>
+                        <Button as='a' title={tag} href={`/tags/${tag}`} variant='pill' />
+                      </li>
+                    ))}
+                  </ul>
+                </object>
               )}
-            </div>
-            {data.tags.length > 0 && (
-              <object>
-                <ul class='tag-list mt-1 flex gap-2'>
-                  {data.tags.map((tag: string) => (
-                    <li>
-                      <Button as='a' title={tag} href={`/tags/${tag}`} variant='pill' />
-                    </li>
-                  ))}
-                </ul>
-              </object>
-            )}
-          </>
-        )
-      }
-    </div>
+            </>
+          )
+        }
+      </div>
+    )}
   </a>
 
   <style>

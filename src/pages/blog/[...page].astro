@@ -62,12 +62,12 @@ const paginationProps = {
         <div class='grid gap-y-16 sm:grid-cols-[3fr_1fr] sm:gap-x-8'>
           <section aria-label='Blog posts list' class='animate' id='content'>
             {/* header */}
-            <div class='mb-3 flex flex-col justify-between text-sm sm:mb-5 sm:flex-row'>
+            <div class='mb-3 flex flex-col justify-between text-mid sm:mb-5 sm:flex-row'>
               <span class='text-muted-foreground'>
                 Page {page.currentPage} - Showing {page.data.length} of {collectionsCount} posts
               </span>
               <a aria-label='View all blog by years' href='/archives' data-astro-prefetch>
-                View all posts by years →
+                View all posts →
               </a>
             </div>
             {/* posts */}
@@ -89,7 +89,7 @@ const paginationProps = {
               <ul class='text-bgColor flex flex-wrap gap-2'>
                 {
                   // Only show top 50 tags in sidebar
-                  uniqueTags.slice(0, 50).map((tag) => (
+                  uniqueTags.slice(0, 20).map((tag) => (
                     <li>
                       <Button title={tag} href={`/tags/${tag}`} variant='pill' />
                     </li>

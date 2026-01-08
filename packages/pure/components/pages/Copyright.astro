@@ -92,7 +92,7 @@ const shares = {
       >
         <Icon class='size-5' name='qrcode' />
       </button>
-      {
+      {/* 
         config.content.share.map((share) => (
           <a
             href={shares[share].link}
@@ -104,7 +104,7 @@ const shares = {
             <Icon class='size-5' name={share} />
           </a>
         ))
-      }
+      */}
     </div>
     <QRCode
       class='absolute z-10 -mt-2 box-content max-h-0 max-w-44 overflow-hidden rounded-xl border bg-muted p-4 opacity-0 transition-all duration-300 ease-in-out'
@@ -118,7 +118,7 @@ const shares = {
     class='flex items-center justify-between text-muted-foreground no-underline'
     target='_blank'
   >
-    <span>Buy me a cup of coffee ☕.</span>
+    <span>Buy me a cup of coffee. ☕</span>
     <Icon class='box-content size-5 p-1' name='receive-money' />
   </a>
 </div>
@@ -136,10 +136,38 @@ const shares = {
 
   // Copy link
   const copyLink = document.getElementById('copy-link')
-  copyLink?.addEventListener('click', () => {
-    navigator.clipboard.writeText(window.location.href)
-    // Show toast
-    showToast({ message: 'Link copied!' })
+  copyLink?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      // Show toast
+      showToast({ message: 'Link copied!' })
+    } catch (error) {
+      console.error('Failed to copy link:', error)
+      // 降级方案：使用传统方法复制
+      const textArea = document.createElement('textarea')
+      textArea.value = window.location.href
+      textArea.style.position = 'fixed'
+      textArea.style.top = '0'
+      textArea.style.left = '0'
+      textArea.style.width = '2em'
+      textArea.style.height = '2em'
+      textArea.style.padding = '0'
+      textArea.style.border = 'none'
+      textArea.style.outline = 'none'
+      textArea.style.boxShadow = 'none'
+      textArea.style.background = 'transparent'
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      try {
+        document.execCommand('copy')
+        showToast({ message: 'Link copied!' })
+      } catch (err) {
+        console.error('Fallback copy failed:', err)
+        showToast({ message: 'Failed to copy link' })
+      }
+      document.body.removeChild(textArea)
+    }
   })
 
   // QRCode

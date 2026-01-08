@@ -5,7 +5,8 @@ export const HeaderMenuSchema = () =>
     .array(
       z.object({
         title: z.string(),
-        link: z.string()
+        link: z.string(),
+        icon: z.string().optional().describe('The icon name for the menu item (optional)'),
       })
     )
     .default([

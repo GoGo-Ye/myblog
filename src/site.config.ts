@@ -46,11 +46,11 @@ export const theme: ThemeUserConfig = {
   /** Configure the header of your site. */
   header: {
     menu: [
-      { title: '文章', link: '/blog' },
-      { title: '项目', link: '/projects' },
-      { title: '归档', link: '/archives' }, 
-      { title: '友链', link: '/links' },
-      { title: '关于', link: '/about' }
+      { title: '文章', link: '/blog', icon: 'document' },
+      { title: '项目', link: '/projects', icon: 'package' },
+      { title: '归档', link: '/archives', icon: 'calendar' }, 
+      { title: '友链', link: '/links', icon: 'link' },
+      { title: '关于', link: '/about', icon: 'info' }
     ]
   },
 
@@ -76,7 +76,7 @@ export const theme: ThemeUserConfig = {
     /** Enable displaying a “Astro & Pure theme powered” link in your site’s footer. */
     credits: true,
     /** Optional details about the social media accounts for this site. */
-    social: { github: 'https://github.com/GoGo-Ye' }
+    //social: { github: 'https://github.com/GoGo-Ye' }
   },
 
   // [Content]
@@ -90,7 +90,7 @@ export const theme: ThemeUserConfig = {
       }
     },
     /** Blog page size for pagination (optional) */
-    blogPageSize: 8,
+    blogPageSize: 6,
     // Currently support weibo, x, bluesky
     share: ['weibo', 'x', 'bluesky']
   }
