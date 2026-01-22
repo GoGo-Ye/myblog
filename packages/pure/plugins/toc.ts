@@ -9,6 +9,9 @@ export function generateToc(headings: readonly MarkdownHeading[]): TocItem[] {
   const stack: TocItem[] = [root]
 
   headings.forEach((h) => {
+    // Only include H2 headings
+    if (h.depth !== 2) return
+    
     const heading: TocItem = { ...h, subheadings: [] }
     // Find the correct parent in the stack.
     // The parent is the last item on the stack with a depth less than the current heading.
